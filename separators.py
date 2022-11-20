@@ -70,10 +70,14 @@ def min_ab_separators(G: nx.Graph, a, b):
                             L[k + 1].append((x, S_new))
                             separators.append(S_new)
         k += 1
-        if not L[k]:
+#        if not L[k]:
+        if k not in L:
             break
 
-    return separators
+    if separators == [set()]:
+        return []
+    else:
+        return separators
 
 def test_min_ab_separators_paper_example() -> nx.Graph:
     G = nx.Graph()
@@ -119,10 +123,40 @@ def test_min_ab_separators_grid() -> nx.Graph:
       frozenset({ (1,0),(1,1) }), \
       frozenset({ (1,1),(2,0) }) }
 
+def test_min_ab_separators_P5() -> nx.Graph:
+    G = nx.Graph()
+    G.add_nodes_from(range(1,6))
+    G.add_edges_from([(1,2), (2,3), (3,4), (4,5)])
+
+    sep_1_2 = min_ab_separators(G, 1, 2)
+    sep_1_3 = min_ab_separators(G, 1, 3)
+    sep_1_4 = min_ab_separators(G, 1, 4)
+    sep_1_5 = min_ab_separators(G, 1, 5)
+    sep_2_3 = min_ab_separators(G, 2, 3)
+    sep_2_4 = min_ab_separators(G, 2, 4)
+    sep_2_5 = min_ab_separators(G, 2, 5)
+    sep_3_4 = min_ab_separators(G, 3, 4)
+    sep_3_5 = min_ab_separators(G, 3, 5)
+    sep_4_5 = min_ab_separators(G, 4, 5)
+
+    # set of sets to make the comparison easy, ignoring order of separators
+    assert {frozenset(s) for s in sep_1_2} == set()
+    assert {frozenset(s) for s in sep_1_3} == { frozenset({2}) }
+    assert {frozenset(s) for s in sep_1_4} == { frozenset({2}), frozenset({3}) }
+    assert {frozenset(s) for s in sep_1_5} == \
+      { frozenset({2}), frozenset({3}), frozenset({4}) }
+    assert {frozenset(s) for s in sep_2_3} == set()
+    assert {frozenset(s) for s in sep_2_4} == { frozenset({3}) }
+    assert {frozenset(s) for s in sep_2_5} == { frozenset({3}), frozenset({4}) }
+    assert {frozenset(s) for s in sep_3_4} == set()
+    assert {frozenset(s) for s in sep_3_5} == { frozenset({4}) }
+    assert {frozenset(s) for s in sep_4_5} == set()
+
 def main():
     test_min_ab_separators_paper_example()
     test_min_ab_separators_tcsstack_example()
     test_min_ab_separators_grid()
+    test_min_ab_separators_P5()
 
     #nx.draw(G, with_labels=True)
     #plt.show()

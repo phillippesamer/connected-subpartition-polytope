@@ -33,6 +33,8 @@ def get_ilp_formulation(G: nx.Graph, k: int) -> str:
         objective += vars[(u,(u-1)%k+1)]
         if u < n:
             objective += "+ "
+        else:
+            objective += "\n"
 
     constraints = "Subject To\n"
     # first class of constraints: 1 colour bound for each vertex
@@ -53,7 +55,7 @@ def get_ilp_formulation(G: nx.Graph, k: int) -> str:
                     for c in range(1,k+1):
                         #label
                         constraints += "(" + str(u) + "," + str(v) + ")-SEP_"
-                        constraints += "#" + str(idx) + "_c" + str(c) + ":"
+                        constraints += "#" + str(idx+1) + "_c" + str(c) + ":"
                         #x_u,c + x_v,c - \sum_(z in Z) x_z,c <= 1
                         constraints += vars[u,c] + "+" + vars[v,c]
                         for z in Z:
@@ -67,7 +69,7 @@ def get_ilp_formulation(G: nx.Graph, k: int) -> str:
     for u in range(1,n+1):
         for c in range(1,k+1):
             domain += vars[u,c]
-    domain = "\n"
+    domain += "\n"
  
     sections = [objective, constraints, bounds, domain, "End\n"]
     contents = "\n".join(sections)
