@@ -5,7 +5,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 # forked from https://github.com/v-kam/shen_liangli_1997
-def min_ab_separators(G, a, b):
+def min_ab_separators(G: nx.Graph, a, b):
     """
     Implementation of:
     Efficient enumeration of all minimal separators in a graph
@@ -85,10 +85,7 @@ def test_min_ab_separators_paper_example() -> nx.Graph:
 
     sep = min_ab_separators(G, 1, 2)
 
-    '''
-    using set of sets makes the comparison easy,
-    no worries about order of separators
-    '''
+    # set of sets to make the comparison easy, ignoring order of separators
     assert {frozenset(s) for s in sep} == \
     { frozenset({5, 3, 6}), \
       frozenset({4, 5, 7}), \
@@ -107,6 +104,7 @@ def test_min_ab_separators_tcsstack_example() -> nx.Graph:
 
     sep = min_ab_separators(G, 1, 7)
 
+    # set of sets to make the comparison easy, ignoring order of separators
     assert {frozenset(s) for s in sep} == \
     { frozenset({2, 3}), \
       frozenset({4, 5, 6}) }
@@ -115,6 +113,7 @@ def test_min_ab_separators_grid() -> nx.Graph:
     G = nx.grid_graph(dim=(2,3))
     sep = min_ab_separators(G, (0,0), (2,1))
 
+    # set of sets to make the comparison easy, ignoring order of separators
     assert {frozenset(s) for s in sep} == \
     { frozenset({ (0,1),(1,0) }), \
       frozenset({ (1,0),(1,1) }), \
