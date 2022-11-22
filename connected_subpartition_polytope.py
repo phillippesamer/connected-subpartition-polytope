@@ -4,6 +4,7 @@
 from separators import min_ab_separators
 
 import networkx as nx
+import subprocess
 
 def get_graph_P5() -> nx.Graph:
     G = nx.Graph()
@@ -76,19 +77,38 @@ def get_ilp_formulation(G: nx.Graph, k: int) -> str:
     return contents
 
 def main():
+    # input graph and number of colours (connected subgraphs)
     graph = get_graph_P5()
     colours = 3
-    output_file = "polytope_of_p5_and_3colours.lp"
+    output_lp_file     = "g=p5_and_k=3_original.lp"
+    output_facets_file = "g=p5_and_k=3_facets.lp"
 
-    print("writing ilp on file " + output_file)
+    # generate "separators formulation" ilp corresponding to this input
+    print("writing ilp on file " + output_lp_file)
 
     ilp = get_ilp_formulation(graph,colours)
 
-    f = open(output_file, 'w')
+    f = open(output_lp_file, 'w')
     f.write(ilp)
     f.close()
 
-    print("done")
+    print("done\n")
+
+    # run polymake to enumerate facets of the corresponding convex hull
+    print("running polymake and writing facets on file " + output_facets_file)
+
+    proc = subprocess.run(
+    ["polymake", "--script", "polymake_cvxhull_from_lp.pl", output_lp_file],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE,
+    text=True)
+
+    f = open(output_facets_file, 'w')
+    f.write(proc.stdout)
+    f.close()
+
+    print(proc.stderr)
+    print("done\n")
 
 
 if __name__ == "__main__":
