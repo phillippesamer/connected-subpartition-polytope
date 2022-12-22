@@ -12,6 +12,42 @@ def get_graph_P5() -> nx.Graph:
     G.add_edges_from([(1,2), (2,3), (3,4), (4,5)])
     return G
 
+def get_graph_C4() -> nx.Graph:
+    G = nx.Graph()
+    G.add_nodes_from(range(1,5))
+    G.add_edges_from([(1,2), (2,3), (3,4), (4,1)])
+    return G
+
+def get_graph_claw() -> nx.Graph:
+    G = nx.Graph()
+    G.add_nodes_from(range(1,5))
+    G.add_edges_from([(1,3), (2,3), (3,4)])
+    return G
+
+def get_graph_paw() -> nx.Graph:
+    G = nx.Graph()
+    G.add_nodes_from(range(1,5))
+    G.add_edges_from([(1,2), (1,3), (2,3), (3,4)])
+    return G
+
+def get_graph_diamond() -> nx.Graph:
+    G = nx.Graph()
+    G.add_nodes_from(range(1,5))
+    G.add_edges_from([(1,2), (1,3), (1,4), (2,3), (3,4)])
+    return G
+
+def get_graph_k_1_4() -> nx.Graph:
+    G = nx.Graph()
+    G.add_nodes_from(range(1,6))
+    G.add_edges_from([(1,2), (1,3), (1,4), (1,5)])
+    return G
+
+def get_graph_k_1_5() -> nx.Graph:
+    G = nx.Graph()
+    G.add_nodes_from(range(1,7))
+    G.add_edges_from([(1,2), (1,3), (1,4), (1,5), (1,6)])
+    return G
+
 def get_ilp_formulation(G: nx.Graph, k: int) -> str:
     """
     Create a string representing the .lp file for the 
@@ -78,10 +114,10 @@ def get_ilp_formulation(G: nx.Graph, k: int) -> str:
 
 def main():
     # input graph and number of colours (connected subgraphs)
-    graph = get_graph_P5()
+    graph = get_graph_claw()
     colours = 3
-    output_lp_file     = "g=p5_and_k=3_original.lp"
-    output_facets_file = "g=p5_and_k=3_facets.lp"
+    output_lp_file     = "examples/g=claw_and_k=3_original.lp"
+    output_facets_file = "examples/g=claw_and_k=3_facets.lp"
 
     # generate "separators formulation" ilp corresponding to this input
     print("writing ilp on file " + output_lp_file)
